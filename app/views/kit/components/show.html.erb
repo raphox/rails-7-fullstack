@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @kit_component %>
+
+<div>
+  <%= link_to "Edit this component", edit_kit_component_path(@kit_component) %> |
+  <%= link_to "Back to components", kit_components_path %>
+
+  <%= button_to "Destroy this component", @kit_component, method: :delete %>
+</div>

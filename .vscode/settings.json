@@ -1,0 +1,29 @@
+{
+  "editor.rulers": [
+    80,
+    120
+  ],
+  "files.trimTrailingWhitespace": true,
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true,
+  "eslint.format.enable": true,
+  "ruby.rubocop.executePath": "/Users/raphox/.rvm/gems/ruby-3.1.2@rails-7-fullstack/bin/",
+  "ruby.useBundler": true, //run non-lint commands with bundle exec
+  "ruby.useLanguageServer": true, // use the internal language server (see below)
+  "solargraph.bundlerPath": "/Users/raphox/.rvm/gems/ruby-3.1.2@rails-7-fullstack/bin/bundle",
+  "solargraph.useBundler": true,
+  "solargraph.transport": "stdio",
+  "solargraph.formatting": true,
+  "solargraph.diagnostics": true,
+  "solargraph.commandPath": "/Users/raphox/.rvm/gems/ruby-3.1.2@rails-7-fullstack/bin/solargraph",
+  "ruby.pathToBundler": "/Users/raphox/.rvm/gems/ruby-3.1.2@rails-7-fullstack/bin/bundle",
+  "ruby.lint": {
+    "rubocop": {
+      "useBundler": true // enable rubocop via bundler
+    },
+    "reek": {
+      "useBundler": true // enable reek via bundler
+    }
+  },
+  "ruby.format": "rubocop" // use rubocop for formatting
+}

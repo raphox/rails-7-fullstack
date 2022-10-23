@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Components</h1>
+
+<div id="kit_components">
+  <% @kit_components.each do |kit_component| %>
+    <%= render kit_component %>
+    <p>
+      <%= link_to "Show this component", kit_component %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New component", new_kit_component_path %>

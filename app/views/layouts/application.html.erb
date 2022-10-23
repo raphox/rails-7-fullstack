@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
     <title>Rails7Fullstack</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
-
-  <body>
-    <%= yield %>
+  <body class="font-inter antialiased bg-slate-100 text-slate-600">
+    <div class="flex h-screen overflow-hidden">
+      <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+        <%= yield %>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,0 +1,27 @@
+<%= form_with(model: kit_component) do |form| %>
+  <% if kit_component.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(kit_component.errors.count, "error") %> prohibited this kit_component from being saved:</h2>
+
+      <ul>
+        <% kit_component.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :product_id, style: "display: block" %>
+    <%= form.text_field :product_id %>
+  </div>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
