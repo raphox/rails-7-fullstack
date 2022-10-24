@@ -1,0 +1,2 @@
+<%= turbo_stream.update "list_#{dom_id(@kit_product)}", partial: "kit/products/list_item", locals: { product: @kit_product } %>
+<%= turbo_stream.update 'kit_product_form', partial: "kit/products/product", locals: { flash: flash,  product: @kit_product } %>

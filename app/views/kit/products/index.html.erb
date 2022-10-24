@@ -17,8 +17,10 @@
       </div>
       <!-- Body -->
       <div class="grow px-4 sm:px-6 md:px-5 py-6">
-        <div id="kit_products" class="mb-4 last:mb-0">
-          <%= render @kit_product %>
+        <div class="mb-4 last:mb-0">
+          <%= turbo_frame_tag 'kit_product_form' do %>
+            <%= render @kit_product %>
+          <% end %>
         </div>
       </div>
     </div>

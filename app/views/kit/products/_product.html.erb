@@ -27,10 +27,14 @@
   <footer>
     <div class="flex flex-col py-5 border-t border-slate-200">
       <div class="flex self-end">
-        <%= link_to "Destroy this product", product,
-                    data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                    class: "btn shadow-none text-rose-500 mr-3" if product.persisted? %>
-        <%= link_to "Back", product.persisted? ? kit_products_path : product, class: "btn border-slate-200 hover:border-slate-300 text-slate-600" %>
+        <% if product.persisted? %>
+          <%= link_to "Destroy this product", product,
+                      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                      class: "btn shadow-none text-rose-500 mr-3" %>
+          <%= link_to "Back", new_kit_product_path,
+                      data: { turbo_frame: 'kit_product_form' },
+                      class: "btn border-slate-200 hover:border-slate-300 text-slate-600" %>
+        <% end %>
         <%= form.button :submit, class: "bg-indigo-500 hover:bg-indigo-600 text-white ml-3" %>
       </div>
     </div>

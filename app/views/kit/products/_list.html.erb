@@ -11,6 +11,7 @@
           <!-- Edit button -->
           <%= link_to new_kit_product_path,
                       aria: { label: "New product" },
+                      data: { turbo_frame: 'kit_product_form' },
                       class: "p-1.5 shrink-0 rounded border border-slate-200 hover:border-slate-300 shadow-sm ml-2" do %>
             <svg class="w-4 h-4 fill-current" viewBox="0 0 16 16">
               <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z"></path>
@@ -35,18 +36,12 @@
       <!-- Direct messages -->
       <div class="mt-4">
         <ul class="mb-6">
-          <% @kit_products.each do |kit_product| %>
-            <li class="-mx-2">
-              <%= link_to kit_product,
-                                aria: { label: "Edit this product" },
-                                class: class_names("flex items-center justify-between w-full p-2 rounded", { "bg-indigo-100": current_page?(kit_product_path(kit_product)) }) do %>
-                <div class="flex items-center truncate">
-                  <div class="truncate">
-                    <span class="text-sm font-medium text-slate-800"><%= kit_product.name %></span>
-                  </div>
-                </div>
+          <%= turbo_frame_tag "list_products" do %>
+            <% @kit_products.each do |kit_product| %>
+              <%= turbo_frame_tag "list_#{dom_id(kit_product)}" do %>
+                <%= render partial: "kit/products/list_item", locals: { product: kit_product } %>
               <% end %>
-            </li>
+            <% end %>
           <% end %>
         </ul>
       </div>

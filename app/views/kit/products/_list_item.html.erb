@@ -1,0 +1,15 @@
+<li class="-mx-2">
+  <%= link_to product,
+              aria: { label: "Edit this product" },
+              data: { turbo_frame: 'kit_product_form' } ,
+              class: class_names(
+                "flex items-center justify-between w-full p-2 rounded",
+                { "bg-indigo-100": current_page?(kit_product_path(product)) }
+              )do %>
+    <div class="flex items-center truncate">
+      <div class="truncate">
+        <span class="text-sm font-medium text-slate-800"><%= product.name %></span>
+      </div>
+    </div>
+  <% end %>
+</li>

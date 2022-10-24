@@ -15,6 +15,7 @@ module Kit
       respond_to do |format|
         format.html { render(:index) }
         format.json { render(:show) }
+        format.turbo_stream
       end
     end
 
@@ -22,7 +23,10 @@ module Kit
     def new
       @kit_product = Kit::Product.new
 
-      render(:index)
+      respond_to do |format|
+        format.html { render(:index) }
+        format.turbo_stream { render(:show) }
+      end
     end
 
     # POST /kit/products or /kit/products.json
@@ -31,7 +35,9 @@ module Kit
 
       respond_to do |format|
         if @kit_product.save
-          format.html { redirect_to(kit_product_url(@kit_product), notice: 'Product was successfully created.') }
+          flash.now[:notice] = 'Product was successfully created.'
+
+          format.html { redirect_to(kit_product_url(@kit_product)) }
           format.json { render(:show, status: :created, location: @kit_product) }
         else
           format.html do
@@ -41,14 +47,19 @@ module Kit
           end
           format.json { render(json: @kit_product.errors, status: :unprocessable_entity) }
         end
+
+        format.turbo_stream
       end
     end
 
     # PATCH/PUT /kit/products/1 or /kit/products/1.json
     def update
+      # binding.break
       respond_to do |format|
         if @kit_product.update(kit_product_params)
-          format.html { redirect_to(kit_product_url(@kit_product), notice: 'Product was successfully updated.') }
+          flash.now[:notice] = 'Product was successfully updated.'
+
+          format.html { redirect_to(kit_product_url(@kit_product)) }
           format.json { render(:show, status: :ok, location: @kit_product) }
         else
           format.html do
@@ -58,6 +69,8 @@ module Kit
           end
           format.json { render(json: @kit_product.errors, status: :unprocessable_entity) }
         end
+
+        format.turbo_stream
       end
     end
 
@@ -65,9 +78,12 @@ module Kit
     def destroy
       @kit_product.destroy
 
+      flash.now[:notice] = 'Product was successfully destroyed.'
+
       respond_to do |format|
-        format.html { redirect_to(kit_products_url, notice: 'Product was successfully destroyed.') }
+        format.html { redirect_to(kit_products_url) }
         format.json { head(:no_content) }
+        format.turbo_stream
       end
     end
 
