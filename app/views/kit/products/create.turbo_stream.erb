@@ -1,1 +1,2 @@
-<%= turbo_stream.update Kit::Product.new, partial: "kit/products/product", locals: { lash: flash, product: @kit_product } %>
+<%= turbo_stream.update 'kit_product_form', partial: "kit/products/product", locals: { lash: flash, product: @kit_product } %>
+<%= turbo_stream.append "list_products", partial: "kit/products/list_item", locals: { product: @kit_product } if @kit_product.persisted? %>
