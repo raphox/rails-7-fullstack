@@ -82,3 +82,7 @@ gem 'simple_form', '~> 5.1'
 
 gem 'rubocop', '~> 1.37'
 gem 'rubocop-rails', '~> 2.17'
+
+gem "ransack", "~> 3.2"
+
+gem "pagy", "~> 5.10"

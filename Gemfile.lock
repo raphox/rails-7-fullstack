@@ -135,6 +135,8 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.9-arm64-darwin)
       racc (~> 1.4)
+    pagy (5.10.1)
+      activesupport
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -173,6 +175,10 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
+    ransack (3.2.1)
+      activerecord (>= 6.1.5)
+      activesupport (>= 6.1.5)
+      i18n
     regexp_parser (2.6.0)
     reline (0.3.1)
       io-console (~> 0.5)
@@ -270,8 +276,10 @@ DEPENDENCIES
   debug
   jbuilder
   jsbundling-rails
+  pagy (~> 5.10)
   puma (~> 5.0)
   rails (~> 7.0.4)
+  ransack (~> 3.2)
   rubocop (~> 1.37)
   rubocop-rails (~> 2.17)
   selenium-webdriver

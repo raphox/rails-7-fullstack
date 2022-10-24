@@ -74,7 +74,8 @@ module Kit
     private
 
     def load_kit_products
-      @kit_products = Kit::Product.all
+      @q = Kit::Product.ransack(params[:q])
+      @pagy, @kit_products = pagy(@q.result)
     end
 
     # Use callbacks to share common setup or constraints between actions.
