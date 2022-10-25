@@ -102,11 +102,7 @@ module Kit
     private
 
     def load_kit_products
-<<<<<<< HEAD
       @q = Kit::Product.select(:id, :name).ransack(params[:q])
-=======
-      @q = Kit::Product.ransack(params[:q])
->>>>>>> main
       @pagy, @kit_products = pagy(@q.result)
     end
 
