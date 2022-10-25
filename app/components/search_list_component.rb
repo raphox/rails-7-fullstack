@@ -7,6 +7,10 @@ class SearchListComponent < ViewComponent::Base
   renders_many :items, SearchListItemComponent
 
   def before_render
-    @resource = form.ransack.object.model_name
+    @resource ||= form.ransack.object.model_name if form?
+  end
+
+  def initialize(resource: nil)
+    @resource = resource
   end
 end

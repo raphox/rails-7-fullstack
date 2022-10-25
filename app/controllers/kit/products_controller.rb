@@ -8,6 +8,15 @@ module Kit
     # GET /kit/products or /kit/products.json
     def index
       @kit_product = Kit::Product.new
+
+      if turbo_frame_request?
+        view_component = SearchListComponent.new(resource: Kit::Product.model_name)
+        @kit_products.each { |kit_product| view_component.with_item(kit_product) }
+
+        render view_component
+      else
+        render(:index)
+      end
     end
 
     # GET /kit/products/1 or /kit/products/1.json
@@ -15,7 +24,7 @@ module Kit
       respond_to do |format|
         format.html do
           if turbo_frame_request?
-            render partial: "kit/products/product", locals: { lash: flash, product: @kit_product }
+            render partial: 'kit/products/product', locals: { lash: flash, product: @kit_product }
           else
             render(:index)
           end
@@ -32,7 +41,7 @@ module Kit
       respond_to do |format|
         format.html do
           if turbo_frame_request?
-            render partial: "kit/products/product", locals: { lash: flash, product: @kit_product }
+            render partial: 'kit/products/product', locals: { lash: flash, product: @kit_product }
           else
             render(:index)
           end
