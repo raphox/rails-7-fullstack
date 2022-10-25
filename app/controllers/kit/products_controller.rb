@@ -7,7 +7,7 @@ module Kit
 
     # GET /kit/products or /kit/products.json
     def index
-      @kit_product = @kit_products.first.reload
+      @kit_product = @kit_products.first
     end
 
     # GET /kit/products/1 or /kit/products/1.json

@@ -1,0 +1,10 @@
+<%= form %>
+<% if items? %>
+  <div class="mt-4">
+    <ul class="mb-6">
+      <% items.each do |item| %>
+        <%= item %>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
