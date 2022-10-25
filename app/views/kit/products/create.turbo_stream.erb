@@ -1,2 +1,2 @@
-<%= turbo_stream.update 'kit_product_form', partial: "kit/products/product", locals: { lash: flash, product: @kit_product } %>
-<%= turbo_stream.append "list_products", partial: "kit/products/list_item", locals: { product: @kit_product } if @kit_product.persisted? %>
+<%= turbo_stream.update "#{@kit_product.model_name.singular}_form", partial: "kit/products/product", locals: { lash: flash, product: @kit_product } %>
+<%= turbo_stream.append "list_#{@kit_product.model_name.plural}", inline: render(SearchListItemComponent.new(@kit_product)) if @kit_product.persisted? %>

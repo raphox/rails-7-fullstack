@@ -113,6 +113,7 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
+    kwalify (0.7.2)
     loofah (2.19.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -135,6 +136,8 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.9-arm64-darwin)
       racc (~> 1.4)
+    pagy (5.10.1)
+      activesupport
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -173,6 +176,14 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
+    ransack (3.2.1)
+      activerecord (>= 6.1.5)
+      activesupport (>= 6.1.5)
+      i18n
+    reek (6.1.1)
+      kwalify (~> 0.7.0)
+      parser (~> 3.1.0)
+      rainbow (>= 2.0, < 4.0)
     regexp_parser (2.6.0)
     reline (0.3.1)
       io-console (~> 0.5)
@@ -240,6 +251,10 @@ GEM
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
+    view_component (2.74.1)
+      activesupport (>= 5.0.0, < 8.0)
+      concurrent-ruby (~> 1.0)
+      method_source (~> 1.0)
     web-console (4.2.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -270,8 +285,11 @@ DEPENDENCIES
   debug
   jbuilder
   jsbundling-rails
+  pagy (~> 5.10)
   puma (~> 5.0)
   rails (~> 7.0.4)
+  ransack (~> 3.2)
+  reek (~> 6.1)
   rubocop (~> 1.37)
   rubocop-rails (~> 2.17)
   selenium-webdriver
@@ -282,6 +300,7 @@ DEPENDENCIES
   stimulus-rails
   turbo-rails
   tzinfo-data
+  view_component (~> 2.74)
   web-console
   webdrivers
 

@@ -1,42 +1,44 @@
-<h2 class="text-2xl text-slate-800 font-bold mb-6"><%= "#{product.persisted? ? 'Edit' : 'New'} Product" %></h2>
+<%= turbo_frame_tag 'kit_product_form' do %>
+  <h2 class="text-2xl text-slate-800 font-bold mb-6"><%= "#{product.persisted? ? 'Edit' : 'New'} Product" %></h2>
 
-<% if notice.present? %>
-  <div class="px-4 py-2 rounded-sm text-sm bg-emerald-100 border border-emerald-200 text-emerald-600">
-    <div class="flex w-full justify-between items-start">
-      <div class="flex">
-        <svg class="w-4 h-4 shrink-0 fill-current opacity-80 mt-[3px] mr-3" viewBox="0 0 16 16">
-          <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM7 11.4L3.6 8 5 6.6l2 2 4-4L12.4 6 7 11.4z"></path>
-        </svg>
-        <div><%= notice %></div>
+  <% if notice.present? %>
+    <div class="px-4 py-2 rounded-sm text-sm bg-emerald-100 border border-emerald-200 text-emerald-600">
+      <div class="flex w-full justify-between items-start">
+        <div class="flex">
+          <svg class="w-4 h-4 shrink-0 fill-current opacity-80 mt-[3px] mr-3" viewBox="0 0 16 16">
+            <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM7 11.4L3.6 8 5 6.6l2 2 4-4L12.4 6 7 11.4z"></path>
+          </svg>
+          <div><%= notice %></div>
+        </div>
       </div>
-    </div>
-  </div>
-<% end %>
-
-<%= simple_form_for product, html: { class: 'grow space-y-6' } do |form| %>
-  <% if product.errors.any? %>
-    <div class="text-rose-500">
-      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
     </div>
   <% end %>
-  <div class="grid gap-5 md:grid-cols-3">
-    <div>
-      <%= form.input :name %>
-    </div>
-  </div>
-  <footer>
-    <div class="flex flex-col py-5 border-t border-slate-200">
-      <div class="flex self-end">
-        <% if product.persisted? %>
-          <%= link_to "Destroy this product", product,
-                      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                      class: "btn shadow-none text-rose-500 mr-3" %>
-          <%= link_to "Back", new_kit_product_path,
-                      data: { turbo_frame: 'kit_product_form' },
-                      class: "btn border-slate-200 hover:border-slate-300 text-slate-600" %>
-        <% end %>
-        <%= form.button :submit, class: "bg-indigo-500 hover:bg-indigo-600 text-white ml-3" %>
+
+  <%= simple_form_for product, html: { class: 'grow space-y-6' } do |form| %>
+    <% if product.errors.any? %>
+      <div class="text-rose-500">
+        <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
+      </div>
+    <% end %>
+    <div class="grid gap-5 md:grid-cols-3">
+      <div>
+        <%= form.input :name %>
       </div>
     </div>
-  </footer>
+    <footer>
+      <div class="flex flex-col py-5 border-t border-slate-200">
+        <div class="flex self-end">
+          <% if product.persisted? %>
+            <%= link_to "Destroy this product", product,
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                        class: "btn shadow-none text-rose-500 mr-3" %>
+            <%= link_to "Back", new_kit_product_path,
+                        data: { turbo_frame: 'kit_product_form' },
+                        class: "btn border-slate-200 hover:border-slate-300 text-slate-600" %>
+          <% end %>
+          <%= form.button :submit, class: "bg-indigo-500 hover:bg-indigo-600 text-white ml-3" %>
+        </div>
+      </div>
+    </footer>
+  <% end %>
 <% end %>

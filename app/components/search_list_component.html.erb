@@ -1,0 +1,12 @@
+<%= form %>
+<% if items? %>
+  <div class="mt-4">
+    <ul class="mb-6">
+      <%= turbo_frame_tag "list_#{@resource.plural}" do %>
+        <% items.each do |item| %>
+          <%= item %>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

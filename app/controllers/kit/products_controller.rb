@@ -7,15 +7,21 @@ module Kit
 
     # GET /kit/products or /kit/products.json
     def index
-      @kit_product = @kit_products.first.reload
+      @kit_product = @kit_products.first
     end
 
     # GET /kit/products/1 or /kit/products/1.json
     def show
       respond_to do |format|
-        format.html { render(:index) }
+        format.html do
+          if turbo_frame_request?
+            render partial: "kit/products/product", locals: { lash: flash, product: @kit_product }
+          else
+            render(:index)
+          end
+        end
+
         format.json { render(:show) }
-        format.turbo_stream
       end
     end
 
@@ -24,7 +30,14 @@ module Kit
       @kit_product = Kit::Product.new
 
       respond_to do |format|
-        format.html { render(:index) }
+        format.html do
+          if turbo_frame_request?
+            render partial: "kit/products/product", locals: { lash: flash, product: @kit_product }
+          else
+            render(:index)
+          end
+        end
+
         format.turbo_stream { render(:show) }
       end
     end
@@ -54,7 +67,6 @@ module Kit
 
     # PATCH/PUT /kit/products/1 or /kit/products/1.json
     def update
-      # binding.break
       respond_to do |format|
         if @kit_product.update(kit_product_params)
           flash.now[:notice] = 'Product was successfully updated.'
@@ -90,7 +102,8 @@ module Kit
     private
 
     def load_kit_products
-      @kit_products = Kit::Product.all
+      @q = Kit::Product.ransack(params[:q])
+      @pagy, @kit_products = pagy(@q.result)
     end
 
     # Use callbacks to share common setup or constraints between actions.

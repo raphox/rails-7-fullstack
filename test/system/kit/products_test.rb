@@ -26,7 +26,7 @@ module Kit
 
     test 'should update Product' do
       visit kit_product_url(@kit_product)
-      click_on 'Edit this product', match: :first
+      click_on 'Edit this kit_product', match: :first
 
       fill_in 'Name', with: @kit_product.name
       click_on 'Update Product'
