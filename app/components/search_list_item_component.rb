@@ -23,7 +23,7 @@ class SearchListItemComponent < ViewComponent::Base
       )
     }
 
-    turbo_frame_tag "list_#{dom_id(@item)}" do
+    turbo_frame_tag dom_id(@item, 'list') do
       content_tag :li, class: "-mx-2" do
         link_to @item, html_options do
           content_tag :div, class: "flex items-center truncate" do

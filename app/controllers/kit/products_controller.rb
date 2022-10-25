@@ -7,7 +7,7 @@ module Kit
 
     # GET /kit/products or /kit/products.json
     def index
-      @kit_product = @kit_products.first
+      @kit_product = Kit::Product.new
     end
 
     # GET /kit/products/1 or /kit/products/1.json
@@ -50,7 +50,7 @@ module Kit
         if @kit_product.save
           flash.now[:notice] = 'Product was successfully created.'
 
-          format.html { redirect_to(kit_product_url(@kit_product)) }
+          format.html { redirect_to(@kit_product) }
           format.json { render(:show, status: :created, location: @kit_product) }
         else
           format.html do
@@ -71,7 +71,7 @@ module Kit
         if @kit_product.update(kit_product_params)
           flash.now[:notice] = 'Product was successfully updated.'
 
-          format.html { redirect_to(kit_product_url(@kit_product)) }
+          format.html { redirect_to(@kit_product) }
           format.json { render(:show, status: :ok, location: @kit_product) }
         else
           format.html do
@@ -102,7 +102,7 @@ module Kit
     private
 
     def load_kit_products
-      @q = Kit::Product.ransack(params[:q])
+      @q = Kit::Product.select(:id, :name).ransack(params[:q])
       @pagy, @kit_products = pagy(@q.result)
     end
 
