@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class SearchListItemComponent < ViewComponent::Base
+<<<<<<< HEAD
   include Turbo::FramesHelper
 
+=======
+>>>>>>> main
   def initialize(item, label: :name)
     @item = item
     @label = item.send(label)

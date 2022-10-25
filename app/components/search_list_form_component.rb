@@ -18,7 +18,7 @@ class SearchListFormComponent < ViewComponent::Base
     @search_value = params[@search_field]
   end
 
-  def initialize(ransack:, search_field: :id_cont)
+  def initialize(ransack:, search_field: :name_cont)
     @ransack = ransack
     @search_field = search_field
   end
