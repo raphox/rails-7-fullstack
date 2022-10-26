@@ -1,0 +1,4 @@
+<%= render SearchListComponent.new do |c| %>
+  <%= c.with_form(ransack: @q) %>
+  <%= @kit_products.each { |kit_product| c.with_item(kit_product) } %>
+<% end %>
