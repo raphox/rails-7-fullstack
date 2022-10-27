@@ -3,3 +3,6 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
+
+import SearchListController from "./search_list_controller"
+application.register("search-list", SearchListController)
