@@ -1,4 +1,3 @@
-<%= render SearchListComponent.new do |c| %>
-  <%= c.with_form(ransack: @q) %>
+<%= render SearchListComponent.new(resource: @q.object.model_name) do |c| %>
   <%= @kit_products.each { |kit_product| c.with_item(kit_product) } %>
 <% end %>
