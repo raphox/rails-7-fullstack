@@ -2,6 +2,8 @@
 
 module Kit
   class ProductsController < ApplicationController
+    skip_before_action :verify_authenticity_token
+
     before_action :load_kit_products, only: %i[index show new]
     before_action :set_kit_product, only: %i[show update destroy]
 
@@ -88,7 +90,7 @@ module Kit
     private
 
     def load_kit_products
-      @q = Kit::Product.select(:id, :name).ransack(params[:q])
+      @q = Kit::Product.select(:id, :name).order(:created_at).ransack(params[:q])
       @pagy, @kit_products = pagy(@q.result)
     end
 

@@ -69,7 +69,7 @@ group :development do
   # gem "spring"
 
   gem 'solargraph'
-  gem "reek", "~> 6.1"
+  gem 'reek', '~> 6.1'
   gem 'rubocop', '~> 1.37'
   gem 'rubocop-rails', '~> 2.17'
 end
@@ -81,8 +81,8 @@ group :test do
   gem 'webdrivers'
 end
 
+gem 'pagy', '~> 5.10'
+gem 'rack-cors', '~> 1.1'
+gem 'ransack', '~> 3.2'
 gem 'simple_form', '~> 5.1'
-
-gem "ransack", "~> 3.2"
-gem "pagy", "~> 5.10"
-gem "view_component", "~> 2.74"
+gem 'view_component', '~> 2.74'
