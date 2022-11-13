@@ -1,33 +1,37 @@
-import { useEffect, useState } from "react";
+import {
+  fetcher,
+  useProduct,
+  useProducts,
+} from "@/pages/kit/products/services";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-import { fetcher, Product, useProducts } from "@/pages/kit/products/services";
 import * as SidebarPrimitive from "../Layout/Sidebar";
-import { useSWRConfig } from "swr";
+import { useProductsActions, useProductsState } from "./context";
 
-interface SidebarProps {
-  loadProduct: Function;
-  selectProduct: Product | undefined;
-}
-
-export default function Sidebar({ loadProduct, selectProduct }: SidebarProps) {
-  const [query, setQuery] = useState<Record<string, any>>();
-  const { fallback } = useSWRConfig();
-  const { products, mutate } = useProducts(query, fallback["kit/products"]);
-
-  const handleSearch = (query: any) => {
-    setQuery(query);
-  };
+export default function Sidebar() {
+  const { setQuery, setProductId } = useProductsActions();
+  const { query, productId } = useProductsState();
+  const { products, mutate: productsMutate } = useProducts(query);
+  const { product } = useProduct(productId || -1);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!query) return;
+    if (product === undefined) return;
 
-    mutate(
-      async () => {
-        return await fetcher("kit/products", { params: query });
-      },
-      { revalidate: false }
-    );
-  }, [query]);
+    router.push(router.pathname, `/kit/products/${product.id}`, {
+      shallow: true,
+    });
+  }, [product]);
+
+  const handleSearch = (query: any) => {
+    productsMutate(
+      async () => await fetcher("kit/products", { params: query }),
+      {
+        revalidate: false,
+      }
+    ).then(() => setQuery(query));
+  };
 
   return (
     <SidebarPrimitive.Root>
@@ -38,9 +42,9 @@ export default function Sidebar({ loadProduct, selectProduct }: SidebarProps) {
       />
       <SidebarPrimitive.List
         items={products}
-        selectItem={selectProduct}
+        selectedItem={product}
         handleSearch={handleSearch}
-        handleClickItem={loadProduct}
+        handleClickItem={setProductId}
       />
     </SidebarPrimitive.Root>
   );

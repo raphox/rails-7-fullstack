@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import { fetcher } from "@/src/services";
 
 export { fetcher };
@@ -8,14 +8,14 @@ export interface Product {
   name: string;
 }
 
-export function useProducts(params: any, fallbackData: any = null) {
+export function useProducts(params: any, config?: SWRConfiguration) {
   const { data, error, mutate } = useSWR<Product[]>(
     "kit/products",
-    () => fetcher("kit/products", params),
+    () => fetcher("kit/products", { params }),
     {
-      fallbackData,
       revalidateOnFocus: false,
       revalidateOnMount: false,
+      ...config,
     }
   );
 
@@ -27,14 +27,14 @@ export function useProducts(params: any, fallbackData: any = null) {
   };
 }
 
-export function useProduct(id?: number, fallbackData: any = null) {
+export function useProduct(id?: number, config?: SWRConfiguration) {
   const { data, error, mutate } = useSWR<Product>(
     id ? `kit/products/${id}` : null,
     fetcher,
     {
-      fallbackData,
       revalidateOnFocus: false,
       revalidateOnMount: false,
+      ...config,
     }
   );
 

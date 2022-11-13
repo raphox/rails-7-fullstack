@@ -11,6 +11,8 @@ const api = axios.create({
 export const fetcher = (
   url: string,
   config?: AxiosRequestConfig<any> | undefined
-) => api.get(url, config).then((res) => res.data);
+) => {
+  return api.get(url, config).then((res) => res.data);
+};
 
 export { api };

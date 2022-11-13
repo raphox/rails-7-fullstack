@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { GetStaticPropsContext } from "next/types";
 
-import { fetcher, useProduct, Product } from "./services";
+import { fetcher } from "./services";
 
 import Form from "@/src/components/Products/Form";
 import Sidebar from "@/components/Products/Sidebar";
@@ -15,26 +13,14 @@ interface ProductsPageProps {
 }
 
 export default function ProductPage({ id, fallback }: ProductsPageProps) {
-  const [selectId, setSelectId] = useState(id);
-  const { product } = useProduct(selectId, fallback[`kit/products/${id}`]);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!selectId || selectId === id) return;
-
-    router.push(`/kit/products/[id]`, `/kit/products/${selectId}`, {
-      shallow: true,
-    });
-  }, [selectId]);
-
   return (
-    <ProductsProvider value={{ fallback }}>
+    <ProductsProvider value={{ fallback, fallbackState: { productId: id } }}>
       <Page.Root>
         <Page.Sidebar>
-          <Sidebar loadProduct={setSelectId} selectProduct={product} />
+          <Sidebar />
         </Page.Sidebar>
         <Page.Content>
-          <Form product={product || ({} as Product)} />
+          <Form />
         </Page.Content>
       </Page.Root>
     </ProductsProvider>

@@ -1,18 +1,15 @@
 import * as yup from "yup";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "@/src/services";
 import { useRouter } from "next/router";
 import { useSWRConfig } from "swr";
 import request from "axios";
 
-import { Product } from "@/pages/kit/products/services";
+import { Product, useProduct } from "@/pages/kit/products/services";
 import FormPrimitive, { Input } from "@/components/Form";
 import Notification from "@/components/Notification";
 import * as FormActions from "@/components/Form/Actions";
-
-interface FormProps {
-  product: Product;
-}
+import { useProductsState } from "./context";
 
 const schema = yup
   .object({
@@ -20,17 +17,13 @@ const schema = yup
   })
   .required();
 
-export default function Form(props: FormProps): JSX.Element {
+export default function Form(): JSX.Element {
   const [message, setMessage] = useState<string>();
-  const [product, setProduct] = useState<Product>(props.product);
   const [errors, setErrors] = useState({});
   const { mutate } = useSWRConfig();
+  const { productId } = useProductsState();
+  const { product } = useProduct(productId);
   const router = useRouter();
-
-  useEffect(() => {
-    setMessage("");
-    setProduct(props.product as Product);
-  }, [props.product]);
 
   const onSubmit = (data: Product) => {
     mutate(
@@ -54,8 +47,6 @@ export default function Form(props: FormProps): JSX.Element {
           //     }
           //   );
           // }
-
-          setProduct((prevState) => ({ ...prevState, ...updatedProduct }));
 
           if (products.length <= 0 || !data.id) {
             setMessage("Product was successfully created.");
@@ -84,10 +75,11 @@ export default function Form(props: FormProps): JSX.Element {
     mutate(
       "kit/products",
       async (products: Product[]) => {
+        if (product === undefined) return;
+
         await api.delete(`kit/products/${product.id}`);
 
         setMessage("Product was successfully destroyed.");
-        setProduct({ name: "" } as Product);
 
         // router.push(`/kit/products/[id]`, `/kit/products/new`, {
         //   shallow: true,
@@ -114,7 +106,7 @@ export default function Form(props: FormProps): JSX.Element {
         <FormActions.Root resource={product}>
           <FormActions.Extra
             className="btn shadow-none text-rose-500 mr-3"
-            href={`/kit/product/${product.id}`}
+            href={`/kit/product/${product?.id}`}
             onClick={handleDelete}
           >
             Destroy this product
