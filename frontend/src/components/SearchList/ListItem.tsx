@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import Link from "next/link";
 
 interface ListItemProps {
   id: number;
@@ -16,7 +17,7 @@ export default function ListItem(props: ListItemProps) {
 
   return (
     <li className="-mx-2">
-      <a
+      <Link
         aria-label="Edit this kit_product"
         className={clsx(
           "flex items-center justify-between w-full p-2 rounded",
@@ -30,7 +31,7 @@ export default function ListItem(props: ListItemProps) {
             <div className="text-sm font-medium">{props.name}</div>
           </div>
         </div>
-      </a>
+      </Link>
     </li>
   );
 }

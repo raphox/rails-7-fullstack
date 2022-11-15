@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { useState } from "react";
 import { api } from "@/src/services";
-import { useRouter } from "next/router";
 import { useSWRConfig } from "swr";
 import request from "axios";
 
@@ -9,7 +8,7 @@ import { Product, useProduct } from "@/pages/kit/products/services";
 import FormPrimitive, { Input } from "@/components/Form";
 import Notification from "@/components/Notification";
 import * as FormActions from "@/components/Form/Actions";
-import { useProductsState } from "./context";
+import { useProductsActions, useProductsState } from "./context";
 
 const schema = yup
   .object({
@@ -18,18 +17,20 @@ const schema = yup
   .required();
 
 export default function Form(): JSX.Element {
+  const { mutate } = useSWRConfig();
   const [message, setMessage] = useState<string>();
   const [errors, setErrors] = useState({});
-  const { mutate } = useSWRConfig();
   const { productId } = useProductsState();
+  const { setProductId } = useProductsActions();
   const { product } = useProduct(productId);
-  const router = useRouter();
 
   const onSubmit = (data: Product) => {
     mutate(
       "kit/products",
       async (products: Product[]) => {
         try {
+          const currentProducts = products !== undefined ? products : [];
+
           const { data: updatedProduct } = await api.request({
             url: `kit/products/${data.id || ""}`,
             method: data.id ? "put" : "post",
@@ -38,31 +39,27 @@ export default function Form(): JSX.Element {
             },
           });
 
-          // if (!data.id) {
-          //   router.push(
-          //     `/kit/products/[id]`,
-          //     `/kit/products/${updatedProduct.id}`,
-          //     {
-          //       shallow: true,
-          //     }
-          //   );
-          // }
+          if (!data.id) {
+            setProductId(updatedProduct.id);
+          }
 
-          if (products.length <= 0 || !data.id) {
+          if (currentProducts.length <= 0 || !data.id) {
             setMessage("Product was successfully created.");
 
-            return [...products, updatedProduct];
+            return [updatedProduct, ...currentProducts];
           }
 
           setMessage("Product was successfully updated.");
 
-          return products.map((item) =>
+          return currentProducts.map((item) =>
             item.id === data.id ? updatedProduct : item
           );
         } catch (err) {
           if (request.isAxiosError(err) && err.response) {
             setErrors(err.response?.data);
           }
+
+          products;
         }
       },
       { revalidate: false }
@@ -80,10 +77,7 @@ export default function Form(): JSX.Element {
         await api.delete(`kit/products/${product.id}`);
 
         setMessage("Product was successfully destroyed.");
-
-        // router.push(`/kit/products/[id]`, `/kit/products/new`, {
-        //   shallow: true,
-        // });
+        setProductId(undefined);
 
         return products.filter((item) => item.id !== product.id);
       },
@@ -99,7 +93,7 @@ export default function Form(): JSX.Element {
         className="simple_form grow space-y-6"
         onSubmit={onSubmit}
         schema={schema}
-        defaultValues={product}
+        defaultValues={product || { name: "" }}
         defaultErrors={errors}
       >
         <Input name="name" className="string form-input w-full" type="text" />

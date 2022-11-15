@@ -28,27 +28,14 @@ export default function ProductPage({ id, fallback }: ProductsPageProps) {
 }
 
 export async function getServerSideProps(context: GetStaticPropsContext) {
-  if (context.params?.id === "new") {
-    return {
-      redirect: {
-        permanent: true,
-        destination: "/kit/products",
-      },
-      props: {},
-    };
-  }
-
   let fallback: Record<string, any> = {
     "kit/products": await fetcher("kit/products"),
   };
 
   if (context.params?.id) {
-    fallback["kit/products#selected"] = await fetcher(
+    fallback[`kit/products/${context.params.id}`] = await fetcher(
       `kit/products/${context.params?.id}`
     );
-
-    fallback[`kit/products/${context.params?.id}`] =
-      fallback["kit/products#selected"];
   }
 
   return {

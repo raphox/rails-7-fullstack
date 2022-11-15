@@ -1,5 +1,6 @@
-import { useProduct, useProducts } from "@/pages/kit/products/services";
 import { createContext, Dispatch, useContext, useReducer } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const initialState: State = {
   query: {},
@@ -22,7 +23,7 @@ export function useProductsActions() {
       });
     },
 
-    setProductId: (productId: number) => {
+    setProductId: (productId: number | undefined) => {
       dispatch({
         type: ActionKind.SET_PRODUCT_ID,
         payload: productId,
@@ -64,7 +65,7 @@ interface Action {
 
 interface State {
   query: Record<string, any>;
-  productId?: number;
+  productId: number | undefined;
 }
 
 export const ProductsProvider = ({
@@ -74,11 +75,40 @@ export const ProductsProvider = ({
   children: React.ReactNode;
   value: { fallback?: any; fallbackState?: any };
 }) => {
-  const { fallback, fallbackState } = value;
+  const router = useRouter();
+  const { fallbackState } = value;
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     ...fallbackState,
   });
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      const isRoot = router.pathname === url;
+
+      isRoot &&
+        dispatch({
+          type: ActionKind.SET_PRODUCT_ID,
+          payload: undefined,
+        });
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (state.productId !== undefined || state.productId !== router.query.id) {
+      router.push(router.pathname, `/kit/products/${state.productId}`, {
+        shallow: true,
+      });
+    } else {
+      router.replace("/kit/products");
+    }
+  }, [state.productId]);
 
   return (
     <ProductsStateContext.Provider value={state}>

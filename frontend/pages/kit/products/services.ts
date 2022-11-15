@@ -27,8 +27,8 @@ export function useProducts(params: any, config?: SWRConfiguration) {
   };
 }
 
-export function useProduct(id?: number, config?: SWRConfiguration) {
-  const { data, error, mutate } = useSWR<Product>(
+export function useProduct(id: number | undefined, config?: SWRConfiguration) {
+  const { data, error, mutate } = useSWR(
     id ? `kit/products/${id}` : null,
     fetcher,
     {

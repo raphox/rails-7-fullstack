@@ -1,28 +1,22 @@
+import { useRouter } from "next/router";
+
 import {
   fetcher,
   useProduct,
   useProducts,
 } from "@/pages/kit/products/services";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 
 import * as SidebarPrimitive from "../Layout/Sidebar";
 import { useProductsActions, useProductsState } from "./context";
 
 export default function Sidebar() {
+  const router = useRouter();
   const { setQuery, setProductId } = useProductsActions();
   const { query, productId } = useProductsState();
+  const { product } = useProduct(productId, {
+    revalidateOnMount: router.query.id === undefined,
+  });
   const { products, mutate: productsMutate } = useProducts(query);
-  const { product } = useProduct(productId || -1);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (product === undefined) return;
-
-    router.push(router.pathname, `/kit/products/${product.id}`, {
-      shallow: true,
-    });
-  }, [product]);
 
   const handleSearch = (query: any) => {
     productsMutate(
