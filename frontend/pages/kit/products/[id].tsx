@@ -1,4 +1,5 @@
 import { GetStaticPropsContext } from "next/types";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 
 import { fetcher } from "./services";
 
@@ -28,20 +29,25 @@ export default function ProductPage({ id, fallback }: ProductsPageProps) {
 }
 
 export async function getServerSideProps(context: GetStaticPropsContext) {
-  let fallback: Record<string, any> = {
-    "kit/products": await fetcher("kit/products"),
-  };
+  const productId = context.params?.id;
+  const queryClient = new QueryClient();
 
-  if (context.params?.id) {
-    fallback[`kit/products/${context.params.id}`] = await fetcher(
-      `kit/products/${context.params?.id}`
+  await queryClient.prefetchQuery(
+    ["kit/products"],
+    async () => await fetcher("kit/products")
+  );
+
+  if (productId) {
+    await queryClient.prefetchQuery(
+      ["kit/products", productId],
+      async () => await fetcher(`kit/products/${productId}`)
     );
   }
 
   return {
     props: {
-      id: context.params?.id || "",
-      fallback,
+      id: productId,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 }

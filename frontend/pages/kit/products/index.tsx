@@ -1,3 +1,5 @@
+import { dehydrate, QueryClient } from "@tanstack/react-query";
+
 import { fetcher } from "./services";
 
 import Form from "@/src/components/Products/Form";
@@ -25,13 +27,14 @@ export default function ProductsPage({ fallback }: ProductsPageProps) {
 }
 
 export async function getServerSideProps() {
-  const products = await fetcher("kit/products");
+  const queryClient = new QueryClient();
+  const fetchProducts = async () => await fetcher("kit/products");
+
+  await queryClient.prefetchQuery(["kit/products"], fetchProducts);
 
   return {
     props: {
-      fallback: {
-        "kit/products": products,
-      },
+      dehydratedState: dehydrate(queryClient),
     },
   };
 }

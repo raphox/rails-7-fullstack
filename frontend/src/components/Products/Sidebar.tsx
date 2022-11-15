@@ -1,10 +1,7 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-import {
-  fetcher,
-  useProduct,
-  useProducts,
-} from "@/pages/kit/products/services";
+import { useProduct, useProducts } from "@/pages/kit/products/services";
 
 import * as SidebarPrimitive from "../Layout/Sidebar";
 import { useProductsActions, useProductsState } from "./context";
@@ -13,19 +10,12 @@ export default function Sidebar() {
   const router = useRouter();
   const { setQuery, setProductId } = useProductsActions();
   const { query, productId } = useProductsState();
-  const { product } = useProduct(productId, {
-    revalidateOnMount: router.query.id === undefined,
-  });
-  const { products, mutate: productsMutate } = useProducts(query);
+  const { data: products, refetch } = useProducts(query);
+  const { data: product } = useProduct(productId);
 
-  const handleSearch = (query: any) => {
-    productsMutate(
-      async () => await fetcher("kit/products", { params: query }),
-      {
-        revalidate: false,
-      }
-    ).then(() => setQuery(query));
-  };
+  useEffect(() => {
+    if (query !== undefined) refetch();
+  }, [query]);
 
   return (
     <SidebarPrimitive.Root>
@@ -35,9 +25,9 @@ export default function Sidebar() {
         title="Products"
       />
       <SidebarPrimitive.List
-        items={products}
+        items={products || []}
         selectedItem={product}
-        handleSearch={handleSearch}
+        handleSearch={setQuery}
         handleClickItem={setProductId}
       />
     </SidebarPrimitive.Root>

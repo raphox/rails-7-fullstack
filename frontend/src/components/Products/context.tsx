@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 const initialState: State = {
-  query: {},
+  query: undefined,
   productId: undefined,
 };
 
@@ -64,8 +64,8 @@ interface Action {
 }
 
 interface State {
-  query: Record<string, any>;
-  productId: number | undefined;
+  query?: Record<string, any>;
+  productId?: number;
 }
 
 export const ProductsProvider = ({
@@ -101,11 +101,14 @@ export const ProductsProvider = ({
   }, []);
 
   useEffect(() => {
-    if (state.productId !== undefined || state.productId !== router.query.id) {
+    if (
+      state.productId !== undefined &&
+      state.productId !== parseInt(router.query.id as string)
+    ) {
       router.push(router.pathname, `/kit/products/${state.productId}`, {
         shallow: true,
       });
-    } else {
+    } else if (router.asPath !== "/kit/products") {
       router.replace("/kit/products");
     }
   }, [state.productId]);
