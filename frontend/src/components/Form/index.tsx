@@ -3,6 +3,7 @@ import { createElement, ReactElement, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export { default as Input } from "./Input";
+import Notification from "@/components/Notification";
 
 interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
   schema?: any;
@@ -24,6 +25,7 @@ export default function Form({
     handleSubmit,
     register,
     reset,
+    setError,
     formState: { errors },
   } = useForm({
     defaultValues,
@@ -34,8 +36,20 @@ export default function Form({
     reset(defaultValues);
   }, [defaultValues]);
 
+  useEffect(() => {
+    Object.entries(defaultErrors).forEach(([key, value]) =>
+      setError(key, { type: "custom", message: value })
+    );
+  }, [defaultErrors]);
+
+  const baseErrors: string[] = defaultErrors?.base || [];
+
   return (
     <form className={className} onSubmit={handleSubmit(onSubmit)}>
+      {baseErrors && (
+        <Notification messages={baseErrors.map((err) => err)} type="error" />
+      )}
+
       {Array.isArray(children)
         ? children.map((child) => {
             return child.props.name

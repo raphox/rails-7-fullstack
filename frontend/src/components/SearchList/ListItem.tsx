@@ -5,7 +5,7 @@ interface ListItemProps {
   id: number;
   name: string;
   selected: boolean;
-  handleClick: Function;
+  handleClick: (id: number) => void;
 }
 
 export default function ListItem(props: ListItemProps) {

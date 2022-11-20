@@ -12,7 +12,7 @@ export default function Input({ name, register, error, ...rest }: InputProps) {
   if (Array.isArray(error)) {
     errors = error;
   } else if (error) {
-    errors.push(error.message as string);
+    errors.push(error.message as FieldError);
   }
 
   return (

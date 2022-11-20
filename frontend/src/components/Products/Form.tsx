@@ -1,14 +1,13 @@
 import * as yup from "yup";
 import { useEffect, useState } from "react";
-import { api } from "@/src/services";
 import request from "axios";
 
 import { Product, useProduct } from "@/pages/kit/products/services";
-import FormPrimitive, { Input } from "@/components/Form";
 import Notification from "@/components/Notification";
+import LoadingOverlay from "@/components/LoadingOverlay";
+import FormPrimitive, { Input } from "@/components/Form";
 import * as FormActions from "@/components/Form/Actions";
-import { useProductsActions, useProductsState } from "./context";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { initialState, useProductsActions, useProductsState } from "./context";
 
 const schema = yup
   .object({
@@ -17,109 +16,86 @@ const schema = yup
   .required();
 
 export default function Form(): JSX.Element {
-  const queryClient = useQueryClient();
   const [message, setMessage] = useState<string>();
-  const [errors, setErrors] = useState({});
-  const { productId } = useProductsState();
-  const { setProductId } = useProductsActions();
-  const { data: product } = useProduct(productId);
+  const [errors, setErrors] = useState<Record<string, string[]>>({
+    base: [],
+  });
+
+  const { product: stateProduct } = useProductsState();
+  const { setProduct } = useProductsActions();
+  const { product, postProduct, putProduct, deleteProduct, isLoading } =
+    useProduct(stateProduct);
 
   useEffect(() => {
     setErrors({});
-  }, [productId]);
+  }, [product]);
 
-  const updateMutation = useMutation({
-    mutationFn: async (data: Product) => {
-      try {
-        const { data: updatedProduct } = await api.request({
-          url: `kit/products/${data.id || ""}`,
-          method: data.id ? "put" : "post",
-          data: {
-            kit_product: data,
-          },
-        });
+  const onSubmit = async (data: Product) => {
+    try {
+      setErrors({});
+      setMessage(undefined);
 
-        setMessage(
-          `Product was successfully ${data.id ? "updated" : "created"}`
-        );
+      if (product?.id) {
+        const newData = await putProduct(data);
 
-        return updatedProduct;
-      } catch (err) {
-        if (request.isAxiosError(err) && err.response) {
-          setErrors(err.response?.data);
-        }
+        setProduct(newData);
+        setMessage("Product was successfully updated");
+      } else {
+        const newData = await postProduct(data);
 
-        throw err;
+        setProduct(newData);
+        setMessage("Product was successfully created");
       }
-    },
-    onSuccess: async (updatedProduct) => {
-      await queryClient.setQueryData<Product[]>(["kit/products"], (old) => {
-        const oldProducts = old ? [...old] : [];
+    } catch (error) {
+      let errors = {};
 
-        const index = oldProducts.findIndex(
-          (item) => item.id === updatedProduct.id
-        ) as number;
+      if (request.isAxiosError(error) && error.response?.status === 422) {
+        errors = error.response?.data;
+      } else {
+        errors = {
+          base: [(error as Error).message],
+        };
+      }
 
-        if (index > -1) {
-          oldProducts[index] = updatedProduct;
-        } else {
-          oldProducts.push(updatedProduct);
-        }
-
-        return oldProducts;
-      });
-
-      setProductId(updatedProduct.id);
-    },
-  });
-
-  const destroyMutation = useMutation({
-    mutationFn: async (data: Product) => {
-      await api.delete(`kit/products/${data.id}`);
-
-      setMessage("Product was successfully destroyed.");
-
-      return data;
-    },
-    onSuccess: async (updatedProduct) => {
-      await queryClient.setQueryData<Product[]>(["kit/products"], (old) => {
-        const oldProducts = old || [];
-        return oldProducts.filter((item) => item.id !== updatedProduct.id);
-      });
-
-      setProductId(undefined);
-    },
-  });
-
-  const onSubmit = (data: Product) => {
-    updateMutation.mutate(data);
+      setErrors(errors);
+    }
   };
 
   const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
 
-    destroyMutation.mutate(product);
+    try {
+      deleteProduct().then(() => {
+        setProduct({ id: undefined } as Product);
+        setMessage("Product was successfully removed");
+      });
+    } catch (error) {
+      setMessage((error as Error).message);
+    }
   };
 
   return (
-    <div className="mb-4 last:mb-0">
+    <div className="mb-4 last:mb-0 relative">
       <h2 className="text-2xl text-slate-800 font-bold mb-6">Edit Product</h2>
-      <Notification message={message} />
+
+      {message && <Notification message={message} type="success" />}
+      {isLoading && <LoadingOverlay />}
+
       <FormPrimitive
         className="simple_form grow space-y-6"
         onSubmit={onSubmit}
         schema={schema}
-        defaultValues={product || { name: "" }}
+        defaultValues={product || initialState.product}
         defaultErrors={errors}
       >
         <Input name="name" className="string form-input w-full" type="text" />
-        <FormActions.Root resource={product}>
+        <FormActions.Root resource={product} loading={isLoading}>
           <FormActions.Extra
             className="btn shadow-none text-rose-500 mr-3"
             href={`/kit/product/${product?.id}`}
             onClick={handleDelete}
           >
-            Destroy this product
+            Destroy this item
           </FormActions.Extra>
           <FormActions.Extra
             className="btn border-slate-200 hover:border-slate-300 text-slate-600"

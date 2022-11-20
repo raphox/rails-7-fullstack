@@ -1,7 +1,7 @@
-import { GetStaticPropsContext } from "next/types";
+import { GetServerSideProps } from "next/types";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 
-import { fetcher } from "./services";
+import { findAll, findById, Product } from "./services";
 
 import Form from "@/src/components/Products/Form";
 import Sidebar from "@/components/Products/Sidebar";
@@ -9,13 +9,13 @@ import * as Page from "@/components/Layout/Page";
 import { ProductsProvider } from "@/src/components/Products/context";
 
 interface ProductsPageProps {
-  id: number;
+  product: Product;
   fallback: Record<string, any>;
 }
 
-export default function ProductPage({ id, fallback }: ProductsPageProps) {
+export default function ProductPage({ product, fallback }: ProductsPageProps) {
   return (
-    <ProductsProvider value={{ fallback, fallbackState: { productId: id } }}>
+    <ProductsProvider value={{ fallback, fallbackState: { product } }}>
       <Page.Root>
         <Page.Sidebar>
           <Sidebar />
@@ -28,26 +28,23 @@ export default function ProductPage({ id, fallback }: ProductsPageProps) {
   );
 }
 
-export async function getServerSideProps(context: GetStaticPropsContext) {
-  const productId = context.params?.id;
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const productId = params?.id ? parseInt(params.id as string) : undefined;
   const queryClient = new QueryClient();
+  let product = {} as Product;
 
-  await queryClient.prefetchQuery(
-    ["kit/products"],
-    async () => await fetcher("kit/products")
-  );
+  await queryClient.prefetchQuery(["kit/products"], findAll);
 
   if (productId) {
-    await queryClient.prefetchQuery(
-      ["kit/products", productId],
-      async () => await fetcher(`kit/products/${productId}`)
-    );
+    product = await findById(productId);
+
+    await queryClient.prefetchQuery(["kit/products", productId], () => product);
   }
 
   return {
     props: {
-      id: productId,
+      product: product,
       dehydratedState: dehydrate(queryClient),
     },
   };
-}
+};

@@ -1,21 +1,25 @@
+import { Product, useProducts } from "@/pages/kit/products/services";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
-import { useProduct, useProducts } from "@/pages/kit/products/services";
 
 import * as SidebarPrimitive from "../Layout/Sidebar";
 import { useProductsActions, useProductsState } from "./context";
 
 export default function Sidebar() {
+  const { query, product } = useProductsState();
+  const { setQuery, setProduct } = useProductsActions();
+  const { products, getAllProducts } = useProducts(query);
   const router = useRouter();
-  const { setQuery, setProductId } = useProductsActions();
-  const { query, productId } = useProductsState();
-  const { data: products, refetch } = useProducts(query);
-  const { data: product } = useProduct(productId);
 
   useEffect(() => {
-    if (query !== undefined) refetch();
+    if (query === undefined) return;
+
+    getAllProducts();
   }, [query]);
+
+  const handleClickItem = (productId: number) => {
+    setProduct({ id: productId } as Product);
+  };
 
   return (
     <SidebarPrimitive.Root>
@@ -28,7 +32,7 @@ export default function Sidebar() {
         items={products || []}
         selectedItem={product}
         handleSearch={setQuery}
-        handleClickItem={setProductId}
+        handleClickItem={handleClickItem}
       />
     </SidebarPrimitive.Root>
   );
