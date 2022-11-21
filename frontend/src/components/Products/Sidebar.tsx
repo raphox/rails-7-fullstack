@@ -1,15 +1,17 @@
 import { Product, useProducts } from "@/pages/kit/products/services";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import * as SidebarPrimitive from "../Layout/Sidebar";
-import { useProductsActions, useProductsState } from "./context";
+import {
+  useProductsActions,
+  useProductsState,
+} from "@/src/contexts/products/hooks";
+import * as SidebarPrimitive from "@/components/Layout/Sidebar";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export default function Sidebar() {
   const { query, product } = useProductsState();
   const { setQuery, setProduct } = useProductsActions();
-  const { products, getAllProducts } = useProducts(query);
-  const router = useRouter();
+  const { products, getAllProducts, isLoading } = useProducts(query);
 
   useEffect(() => {
     if (query === undefined) return;
@@ -28,12 +30,15 @@ export default function Sidebar() {
         hrefNew="/kit/products"
         title="Products"
       />
-      <SidebarPrimitive.List
-        items={products || []}
-        selectedItem={product}
-        handleSearch={setQuery}
-        handleClickItem={handleClickItem}
-      />
+      <div className="relative">
+        {isLoading && <LoadingOverlay bgColor="white" />}
+        <SidebarPrimitive.List
+          items={products || [{ id: undefined, name: "loading..." }]}
+          selectedItem={product}
+          handleSearch={setQuery}
+          handleClickItem={handleClickItem}
+        />
+      </div>
     </SidebarPrimitive.Root>
   );
 }

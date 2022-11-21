@@ -1,29 +1,36 @@
 interface NotificationProps {
   message?: string;
   messages?: string[];
+  setMessage?: Function;
   className?: string;
   type?: "success" | "warning" | "error" | "info";
 }
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Notification({
   message,
   messages,
-  className,
+  setMessage,
   type,
 }: NotificationProps) {
+  const timeout = useRef<ReturnType<typeof setTimeout>>();
   const [open, setOpen] = useState(true);
+  const reset = () => {
+    setOpen(false);
+    setMessage && setMessage(undefined);
+  };
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setOpen(false);
-    }, 3000);
+    timeout.current = setTimeout(reset, 3000);
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timeout.current);
   }, []);
 
   useEffect(() => {
+    clearTimeout(timeout.current);
+    timeout.current = setTimeout(reset, 3000);
+
     setOpen(true);
   }, [message, messages]);
 

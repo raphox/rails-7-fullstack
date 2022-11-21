@@ -7,7 +7,11 @@ import Notification from "@/components/Notification";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import FormPrimitive, { Input } from "@/components/Form";
 import * as FormActions from "@/components/Form/Actions";
-import { initialState, useProductsActions, useProductsState } from "./context";
+import { initialState } from "@/contexts/products/store";
+import {
+  useProductsActions,
+  useProductsState,
+} from "@/contexts/products/hooks";
 
 const schema = yup
   .object({
@@ -61,14 +65,14 @@ export default function Form(): JSX.Element {
     }
   };
 
-  const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
+  const handleDelete = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
 
     try {
-      deleteProduct().then(() => {
-        setProduct({ id: undefined } as Product);
-        setMessage("Product was successfully removed");
-      });
+      await deleteProduct();
+
+      setProduct({ id: undefined } as Product);
+      setMessage("Product was successfully removed");
     } catch (error) {
       setMessage((error as Error).message);
     }
@@ -78,7 +82,13 @@ export default function Form(): JSX.Element {
     <div className="mb-4 last:mb-0 relative">
       <h2 className="text-2xl text-slate-800 font-bold mb-6">Edit Product</h2>
 
-      {message && <Notification message={message} type="success" />}
+      {message && (
+        <Notification
+          message={message}
+          setMessage={setMessage}
+          type="success"
+        />
+      )}
       {isLoading && <LoadingOverlay />}
 
       <FormPrimitive

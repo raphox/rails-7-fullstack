@@ -5,7 +5,7 @@ import { findAll } from "./services";
 import Form from "@/src/components/Products/Form";
 import Sidebar from "@/components/Products/Sidebar";
 import * as Page from "@/components/Layout/Page";
-import { ProductsProvider } from "@/src/components/Products/context";
+import { ProductsProvider } from "@/contexts/products";
 
 interface ProductsPageProps {
   fallback: Record<string, any>;

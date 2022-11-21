@@ -70,7 +70,7 @@ export function useProduct(product: Product) {
     (newData: Product) => create(newData),
     {
       onSuccess: (data) => {
-        queryClient.prefetchQuery(["kit/products", data.id], data);
+        queryClient.prefetchQuery(["kit/products", data.id], () => data);
 
         const previousTodos = queryClient.getQueryData<Product[]>([
           "kit/products",
