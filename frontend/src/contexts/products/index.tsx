@@ -1,7 +1,7 @@
 import { createContext, Dispatch, useEffect, useReducer, useRef } from "react";
 import { useRouter } from "next/router";
 
-import { Action, ActionKind, initialState, reducer, State } from "./store";
+import { Action, actions, initialState, reducer, State } from "./store";
 
 export const ProductsStateContext = createContext<State>(initialState);
 export const ProductsDispatchContext = createContext<Dispatch<Action> | null>(
@@ -27,32 +27,26 @@ export const ProductsProvider = ({
   const prevProduct = useRef(product);
 
   useEffect(() => {
-    const handleRouteChange = (url: string) => {
+    const handle = (url: string) => {
       const isRoot = router.pathname === url;
 
       if (isRoot) {
         prevProduct.current = initialState.product;
-
-        dispatch({
-          type: ActionKind.SET_PRODUCT,
-          payload: initialState.product,
-        });
+        actions(dispatch).setProduct(initialState.product);
       }
     };
 
-    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on("routeChangeComplete", handle);
 
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
+    return () => router.events.off("routeChangeComplete", handle);
   }, []);
 
   useEffect(() => {
     if (product.id === prevProduct.current.id) return;
 
-    if (product.id) {
-      prevProduct.current = product;
+    prevProduct.current = product;
 
+    if (product.id) {
       router.push(router.pathname, `/kit/products/${product.id}`, {
         shallow: true,
       });
