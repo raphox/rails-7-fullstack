@@ -1,31 +1,10 @@
-# README
+# Rails 7 + Hotwire (Turbo + Stimulus) = Modern web applications
 
 ![Screen Shot 2022-10-25 at 08 11 44](https://user-images.githubusercontent.com/156166/197758774-dd969934-1503-432c-b1cd-e71dcc74f5dc.png)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+https://medium.com/@raphox/rails-7-hotwire-turbo-stimulus-modern-web-applications-d9dab177bdcb
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-# To do
+## Steps used to generate this project:
 
 ```
 rails new rails-7-fullstack -j esbuild -c tailwind
@@ -42,3 +21,11 @@ bin/rails db:migrate
 bundle add simple_form
 bin/rails generate simple_form:install
 ```
+
+## Branchs:
+
+I created different PRs to show the differences during the improviment from Rails' scaffold to a NextJS application as client:
+
+* Hotwire (Turbo): https://github.com/raphox/rails-7-fullstack/pull/1
+* Stimulus: https://github.com/raphox/rails-7-fullstack/pull/2
+* NextJS: https://github.com/raphox/rails-7-fullstack/pull/3
