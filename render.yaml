@@ -1,7 +1,7 @@
 databases:
   - name: rails-7-fullstack
-    databaseName: rails-7-fullstack
-    user: rails-7-fullstack
+    databaseName: rails_7_fullstack
+    user: rails_7_fullstack_user
 
 services:
   - type: web
