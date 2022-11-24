@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'ransack/helpers'
+
 module SearchListFormHelper
   def form_tag(options = {}, &)
     options.merge!({ builder: SearchListBuilder })
