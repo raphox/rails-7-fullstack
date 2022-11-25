@@ -1,0 +1,18 @@
+databases:
+  - name: rails-7-fullstack
+    databaseName: rails_7_fullstack
+    user: rails_7_fullstack_user
+
+services:
+  - type: web
+    name: rails-7-fullstack
+    env: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rails-7-fullstack
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
