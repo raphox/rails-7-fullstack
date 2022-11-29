@@ -1,0 +1,2 @@
+<%= turbo_stream.update dom_id(@kit_product, 'list'), inline: render(SearchListItemComponent.new(@kit_product)) %>
+<%= turbo_stream.update "#{@kit_product.model_name.singular}_form", partial: "kit/products/product", locals: { flash: flash,  product: @kit_product } %>

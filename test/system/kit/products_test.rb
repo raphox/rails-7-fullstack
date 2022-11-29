@@ -17,8 +17,10 @@ module Kit
       visit kit_products_url
       click_on 'New product'
 
-      fill_in 'Name', with: @kit_product.name
-      click_on 'Create Product'
+      within("form##{dom_id(Kit::Product.new)}") do
+        fill_in 'Name', with: @kit_product.name
+        click_on 'Create Product'
+      end
 
       assert_text 'Product was successfully created'
       click_on 'Back'
@@ -26,10 +28,13 @@ module Kit
 
     test 'should update Product' do
       visit kit_product_url(@kit_product)
-      click_on 'Edit this product', match: :first
 
-      fill_in 'Name', with: @kit_product.name
-      click_on 'Update Product'
+      find("li a[href='#{kit_product_path(@kit_product)}']").click
+
+      within("form##{dom_id(@kit_product, :edit)}") do
+        fill_in 'Name', with: @kit_product.name
+        click_on 'Update Product'
+      end
 
       assert_text 'Product was successfully updated'
       click_on 'Back'

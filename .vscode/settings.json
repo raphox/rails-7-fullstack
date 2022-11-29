@@ -3,6 +3,9 @@
     80,
     120
   ],
+  "files.exclude": {
+    "frontend": true
+  },
   "files.trimTrailingWhitespace": true,
   "editor.tabSize": 2,
   "files.insertFinalNewline": true,

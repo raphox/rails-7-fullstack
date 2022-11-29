@@ -5,8 +5,62 @@ AllCops:
   TargetRubyVersion: 3.1.2
   NewCops: enable
 
-Style/Documentation:
+Lint/Debugger:
+  Severity: error
+
+Lint/MissingSuper:
   Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 100
+
+Metrics/BlockLength:
+  Max: 50
+  Exclude:
+    - spec/**/*
+
+Metrics/MethodLength:
+  Max: 25
+
+Layout/LineLength:
+  Max: 120
+  IgnoredPatterns: ['\A\s*#']
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/FormatStringToken:
+  EnforcedStyle: template
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/Documentation:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma

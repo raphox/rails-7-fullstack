@@ -1,9 +1,14 @@
-<%= form %>
-<% if items? %>
+<%= content_tag :div, data: { controller: "search-list" } do %>
+  <%= form if form? %>
   <div class="mt-4">
     <ul class="mb-6">
-      <% items.each do |item| %>
-        <%= item %>
+      <%= turbo_frame_tag "list_#{@resource.plural}" do %>
+        <% items.each do |item| %>
+          <%= item %>
+        <% end %>
+        <% if items.empty? %>
+          <%= render SearchListItemComponent.new(Kit::Product.new(name: 'Not found items')) %>
+        <% end %>
       <% end %>
     </ul>
   </div>

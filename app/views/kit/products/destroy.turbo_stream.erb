@@ -1,0 +1,3 @@
+<%= turbo_stream.remove dom_id(@kit_product, 'list') %>
+<%= turbo_stream.update "#{@kit_product.model_name.singular}_form", partial: "kit/products/product", locals: { flash: flash, product: Kit::Product.new } %>
+
